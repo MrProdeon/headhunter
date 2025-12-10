@@ -1,6 +1,9 @@
 [tool.poetry]
 name = "headhunter"
 version = "0.1.0"
+packages = [
+    { include = "src" }
+]
 description = ""
 authors = ["Prodeon <prodeon21@gmail.com>"]
 readme = "README.md"
