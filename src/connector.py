@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import requests
+import json
+from src.
 
 class Connector(ABC):
 
@@ -38,7 +40,13 @@ class HeadHunterApi(Connector):
     def get_vacancies(self, text="", page=0):
         params = {"text" : text, "page" : page, "per_page" : 100}
         data = self._connect(params)
-        return data.get("items", [])
+        return json.dumps(data.get("items", []), indent=4, ensure_ascii=False)
+
+    def  cast_to_object_list(self, vacancies : list[dict]):
+        vacancy_list = [
+            for vacancy in vacancies
+        ]
+
 
 
 if __name__ == "__main__":
