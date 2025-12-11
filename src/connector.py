@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import requests
 import json
-from src.
+from src.Vacancy import Vacancy
 
 class Connector(ABC):
 
@@ -40,16 +40,32 @@ class HeadHunterApi(Connector):
     def get_vacancies(self, text="", page=0):
         params = {"text" : text, "page" : page, "per_page" : 100}
         data = self._connect(params)
-        return json.dumps(data.get("items", []), indent=4, ensure_ascii=False)
+        return data.get("items", [])
 
-    def  cast_to_object_list(self, vacancies : list[dict]):
-        vacancy_list = [
-            for vacancy in vacancies
-        ]
+    @staticmethod
+    def cast_to_object_list(vacancies: list[dict]):
+        vacancy_list = []
+        for vacancy in vacancies:
+            salary = vacancy.get("salary")
+            salary_from = salary.get("from") if salary else None
+            salary_to = salary.get("to") if salary else None
+
+            vacancy_list.append(
+                Vacancy(
+                    vacancy["name"],
+                    vacancy["alternate_url"],
+                    salary_from,
+                    salary_to
+                )
+            )
+        return vacancy_list
 
 
 
 if __name__ == "__main__":
 
     obj = HeadHunterApi("https://api.hh.ru/vacancies", {"User-Agent" : "test for skypro"})
-    print(obj.get_vacancies(text="python"))
+    obj_list = obj.get_vacancies("python")
+    rs = obj.cast_to_object_list(obj_list)
+    for i in rs:
+        print(i.salary_from)
