@@ -53,8 +53,26 @@ class Vacancy:
 
     @staticmethod
     def __validate_salary(salary: int | float):
-        if salary is None:
-            salary = "Не указано"
+        if salary is None or isinstance(salary, str):
+            salary = 0
         else:
             salary = salary
         return salary
+
+    @staticmethod
+    def cast_to_object_list(vacancies: list[dict]):
+        vacancy_list = []
+        for vacancy in vacancies:
+            salary = vacancy.get("salary")
+            salary_from = salary.get("from") if salary else None
+            salary_to = salary.get("to") if salary else None
+
+            vacancy_list.append(
+                Vacancy(
+                    vacancy["name"],
+                    vacancy["alternate_url"],
+                    salary_from,
+                    salary_to
+                )
+            )
+        return vacancy_list
