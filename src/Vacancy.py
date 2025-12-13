@@ -7,12 +7,12 @@ class Vacancy:
     Так же проверяем указано ли название. Если нет, то прописываем Без названия.
     """
 
-    __slots__ = ("title", "link", "salary_from","salary_to", "description")
+    __slots__ = ("title", "link", "salary_from", "salary_to", "description")
 
     def __init__(self, title: str, link: str, salary_from: int | float, salary_to: int | float):
         self.title = self.__validate_title(title)
         self.link = link
-        self.salary_from = self.__validate_salary(salary_from)
+        self.salary_from= self.__validate_salary(salary_from)
         self.salary_to = self.__validate_salary(salary_to)
 
     def __gt__(self, other):
@@ -43,6 +43,10 @@ class Vacancy:
             return self.salary <= other
         raise ValueError("Переданы несравнимые данные")
 
+    @property
+    def salary(self):
+        return max(self.salary_from, self.salary_to)
+
     @staticmethod
     def __validate_title(title: str):
         if not isinstance(title, str) or not title:
@@ -53,11 +57,16 @@ class Vacancy:
 
     @staticmethod
     def __validate_salary(salary: int | float):
+
+        if isinstance(salary, (int, float)):
+            return int(salary)
+
         if salary is None or isinstance(salary, str):
-            salary = 0
-        else:
-            salary = salary
-        return salary
+            return 0
+
+        return 0
+
+
 
     @staticmethod
     def cast_to_object_list(vacancies: list[dict]):
